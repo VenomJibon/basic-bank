@@ -2,6 +2,7 @@ body{
     padding: 100px;
 }
 
+/*Customizing submit area */
 .submit-area{
     margin-top: 50px;
     border: 10px;
@@ -9,10 +10,14 @@ body{
     padding: 50px;
     border-radius: 10px;
 }
+
+/*By default transaction area will be hidden, will be visible only when clicked*/
 #transaction-area{
     display: none;
     /*Hidden the transaction area by default*/ 
 }
+
+/*Customizing upper boxes like deposit, withdraw and balance*/
 
 .status{
     margin: 0 20px;
@@ -20,6 +25,8 @@ body{
     padding: 20px;
     border-radius: 10px;
 }
+
+/*Giving color of the boxes*/ 
 
 .deposit{
     background-color: slateblue;
