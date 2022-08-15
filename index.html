@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Bank</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div id="login-area">
+        <h1 class="text-center">Welcome to Basic Bank</h1>
+        <!--Submit area has some styles in it, thus we are making it in a new div-->
+        <div class="submit-area">
+            <h4>Login in your account</h4>
+            <!--class: form-control brings basic styling for each part of form, placeholder brings the text inside each input box-->
+            <input type="email" class="form-control" placeholder="Email" >
+            <br>
+            <input type="password" class="form-control" placeholder="Password" >
+            <br>
+
+            <button id = "login-btn" class="btn btn-success">Submit</button>
+        </div>
+
+    </div>
+
+    <div id="transaction-area">
+        <!--This is like a grid of 12 column, we are assigning 4 for each box as per our website needs-->
+        <div class="row">
+            <!--<div class="col-md-4 deposit"> This should not be done-->
+            <div class="col-md-4">
+
+            <!--Here we have to customize each box, if we gave class into the parent div, it would force the last div to go in the next line, thus we will give the class inside the parent div as given-->
+            <!--Here status is the common class for all the 3 boxes-->
+                <div class="deposit status">
+                    <h5>Deposit</h5>
+                    <h2>$<span id = "current-deposit">00</span></h2>
+                    <!--In order to separate $ and the exact amount-->
+
+                </div>
+                
+            </div>
+            <div class="col-md-4">
+                <div class="withdraw status">
+                    <h5>Withdraw</h5>
+                    <h2>$<span id = "current-withdraw">00</span></h2>
+
+                </div>
+                
+            </div>
+            <div class="col-md-4">
+                <div class="balance status">
+                    <h5>Balance</h5>
+                    <h2>$<span id = "current-balance">1500</span></h2>
+
+                </div>
+                
+            </div>
+        </div>
+
+        <div>
+            <div class="row">
+                <div class="col-md-6">
+                    <!--As we already coded how to style similar type of input box, we will use the previous class here as well-->
+                    <div class="submit-area">
+                        <h4>Deposit Balance</h4>
+                        <input id = "deposit-val" type="text" class="form-control" placeholder="$ amount you want to deposit">
+                        <br>
+                        <button id = "deposit-btn"class="btn btn-success">Deposit</button></div>
+
+                    </div>
+                    
+                <div class="col-md-6">
+                    <div class="submit-area">
+                        <h4>Withdraw Balance</h4>
+                        <input id = "withdraw-val" type="text" class="form-control" placeholder="$ amount you want to withdraw">
+                        <br>
+                        <button id = "withdraw-btn"class="btn btn-success">Withdraw</button></div>
+
+                    </div>
+                    
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // login button event handler
+        var loginBtn = document.getElementById("login-btn");
+        loginBtn.addEventListener("click", function(){
+            // check different events
+            // in order to dynamically hide elements after clicking the submit method, we will take help of css. The display property will be used here
+            var loginArea = document.getElementById("login-area");
+            // now we have captured the whole area using the id
+            loginArea.style.display = "none";
+            // this is how we can apply CSS in JS
+
+            // now we want to display the transaction area when the submit button is pressed, for that, first we need to dynamically hide the element in style.css and then display it only when the button is pressed
+            var trxArea = document.getElementById("transaction-area");
+            trxArea.style.display = "block";
+            // because div's by default display property is block
+        })
+
+        // deposit button event handler
+        var depositBtn = document.getElementById("deposit-btn");
+        depositBtn.addEventListener("click", function(){
+            // please note that, we've added id in the above transaction section to work her
+            // this is how we can capture value
+            // for input tag, we will use .value
+            var depositValue = document.getElementById("deposit-val").value;
+            //this will by default give string as value, so we've to typecast it to float
+            var depositAmount = parseFloat(depositValue);
+            
+            // this is the amount user wants to add
+            
+            //console.log(typeof(depositValue));
+
+            // but for other tags such as h2/span, we will use .innerText
+            // reading value
+            // Repetition #1
+            // var existingDepositValue = document.getElementById("current-deposit").innerText;
+
+            // // this will get the current existing deposit amount showing on the screen in the particular box, this also by default gives string as output
+            // var currentDepositAmount = parseFloat(existingDepositValue);
+            // var totalDep = depositAmount + currentDepositAmount;
+            // // writing value
+            // // updating value
+            // document.getElementById("current-deposit").innerText = totalDep;
+            // // the inputted deposit amount remains in the box, thus we will do the following
+            
+
+            // also, when depositing value, we need to update the main balance
+            // Repetition #2
+            // var existingBalanceValue = document.getElementById("current-balance").innerText;
+            // var currentBalanceAmount = parseFloat(existingBalanceValue);
+            // var totalBal = depositAmount + currentBalanceAmount; // just give currentDepositAmount instead of this, there will be logical error
+            // // this is basically adding the amount user wants to deposit with the existing balance in the box
+            // document.getElementById("current-balance").innerText = totalBal;
+
+            // now see that we are repeating the same thing, so let's use a function
+
+            updateSpanTextAdd("current-deposit", depositAmount);
+            updateSpanTextAdd("current-balance", depositAmount);
+
+        })
+
+        var withdrawBtn = document.getElementById("withdraw-btn");
+        withdrawBtn.addEventListener("click", function(){
+            var withdrawValue = document.getElementById("withdraw-val").value;
+            var withdrawAmount = parseFloat(withdrawValue);
+            document.getElementById("withdraw-val").value = "";
+            updateSpanTextAddRemove("current-withdraw", withdrawAmount);
+
+
+            
+
+        })
+        // function to update values on top box, specifically adding value in deposit and main balance
+
+        function updateSpanTextAdd(id,depositAmount){
+            var existingValue = document.getElementById(id).innerText;
+            var currentAmount = parseFloat(existingValue);
+            var total = depositAmount + currentAmount;
+            document.getElementById(id).innerText = total;
+            document.getElementById("deposit-val").value = "";
+
+        }
+
+        function updateSpanTextAddRemove(id,withdrawAmount){
+            var existingValue = document.getElementById(id).innerText;
+            var currentAmount = parseFloat(existingValue);
+            var totalWithdraw = withdrawAmount + currentAmount;
+            var mainBalance = document.getElementById("current-balance").innerText;
+            var mainBalanceAmount = parseFloat(mainBalance);
+            var balanceAfterWithdraw = mainBalanceAmount - withdrawAmount;
+            document.getElementById(id).innerText = totalWithdraw;
+            document.getElementById("current-balance").innerText = balanceAfterWithdraw;
+            document.getElementById("withdraw-val").value = "";
+
+        }
+
+        // function to update values on top box, specifically adding value in withdraw and removing from main balance
+
+    </script>
+    
+</body>
+</html>
